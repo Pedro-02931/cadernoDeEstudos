@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Prompts usados](README.md)
+* [Arquitetura de um Plano de Estudos Nível CERN para o SENAI](README.md)
 
 ## SO
 
