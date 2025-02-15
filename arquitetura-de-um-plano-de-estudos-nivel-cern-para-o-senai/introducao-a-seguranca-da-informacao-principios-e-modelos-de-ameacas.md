@@ -174,11 +174,80 @@ Vou resumir aqui:
 
 **Evasão de Firewalls e IDS usando Polimorfismo e Ofuscação**
 
-Técnicas de polimorfismo geram variantes de malware que alteram sua assinatura estática, dificultando a detecção por soluções baseadas em assinatura. Da mesma forma, ofuscações em pacotes (via fragmentação, encoding de payload ou criptografia customizada) podem iludir sistemas de monitoramento, permitindo que o tráfego hostil se misture a fluxos legítimos.
+Técnicas de polimorfismo, que a capacidade de um malware de se modificar de modo a alterar sua assinatura estática (sequência de bytes que identifica o malware) a cada nova infecção ou iteração, variantes de malware que alteram sua assinatura estática, dificultando a detecção por soluções baseadas em assinatura como antivírus, que dependem de assinaturas conhecidas para identificar ameaças.
+
+O malware contém um motor polimórfico que gera novas versões de seu código a cada execução, por exemplo, um vírus polimórfico pode reordenar suas instruções, utilizar diferentes métodos de criptografia para seus segmentos de código e substituir funções por equivalentes que realizam a mesma tarefa onde cada nova versão tem uma assinatura diferente.
+
+Da mesma forma, ofuscações em pacotes (via fragmentação, encoding de payload ou criptografia customizada) podem iludir sistemas de monitoramento, permitindo que o tráfego hostil se misture a fluxos legítimos.
+
+Vou resumir aqui:
+
+1. **Fragmentação**:
+   * **Descrição**: Dividir o payload (carga útil) malicioso em partes menores e enviar esses fragmentos separadamente. O malware é reconstituído no destino.
+   * **Exemplo**: Um arquivo malicioso pode ser dividido em vários pacotes menores, cada um transmitido separadamente para evitar detecção.
+2. **Encoding de Payload**:
+   * **Descrição**: Codificar o payload em diferentes formatos (por exemplo, Base64) para mascarar o conteúdo original.
+   * **Exemplo**: A codificação de payload torna a análise direta do conteúdo mais difícil para sistemas de monitoramento.
+3. **Criptografia Customizada**:
+   * **Descrição**: Usar algoritmos de criptografia personalizados para proteger o payload. Apenas o malware sabe como decifrar seu próprio conteúdo.
+   * **Exemplo**: Criptografar o código malicioso com uma chave que só será conhecida no momento da execução, evitando a detecção por scanners que analisam o conteúdo.
+
+#### Contramedidas
+
+**Análise Heurística e Comportamental:**
+
+* **Descrição**: Em vez de buscar assinaturas específicas, essas técnicas analisam o comportamento dos programas e identificam padrões suspeitos de atividades, como acessos não autorizados à memória ou comportamentos anômalos.
+* **Exemplo**: Um antivírus com análise heurística pode detectar malware polimórfico observando a atividade suspeita, independentemente da assinatura.
+
+**Aprendizado de Máquina:**
+
+* **Descrição**: Modelos de aprendizado de máquina podem ser treinados para reconhecer comportamentos maliciosos e padrões ocultos em grandes volumes de dados.
+* **Exemplo**: Detectar novas variantes de malware com base em similaridades comportamentais em vez de apenas assinaturas estáticas.
 
 **Injeção de Código (SQLi, XXE, RCE)**
 
-A injeção de comandos SQL (SQLi) continua sendo um dos métodos mais comuns para obtenção de acesso não autorizado a bancos de dados. Em paralelo, ataques como XXE (XML External Entities) exploram processadores XML mal configurados para exfiltrar arquivos internos ou realizar DoS. Já as RCE (Remote Code Execution) permitem que o invasor execute comandos arbitrários no servidor, muitas vezes resultando em controle total da aplicação ou do sistema operacional subjacente.
+A injeção de comandos SQL (SQLi) continua sendo um dos métodos mais comuns para obtenção de acesso não autorizado a bancos de dados, onde a vulnerabilidade permite que um atacante interfira nas consultas que uma aplicação faz ao banco de dados. Isso ocorre quando dados fornecidos pelo usuário são incluídos diretamente em uma consulta SQL sem a devida validação ou sanitização.&#x20;
+
+**Como Funciona?**
+
+1. **Entrada Maliciosa**:
+   * O atacante insere comandos SQL maliciosos em campos de entrada de formulários, como campos de login, caixas de pesquisa ou parâmetros de URL.
+   * Exemplo: Inserir `' OR '1'='1` em um campo de senha pode transformar uma consulta SQL legítima em uma que retorna todos os usuários.
+2. **Execução da Consulta**:
+   * A consulta modificada é executada pelo banco de dados.
+   * O ataque pode resultar na divulgação de dados confidenciais, modificação ou exclusão de dados ou até mesmo a execução de comandos administrativos no banco de dados.
+
+* **Prevenção:**
+  * **Sanitização e Validação de Entrada**: Utilizar APIs seguras, como prepared statements, que separam o código SQL dos dados.
+  * **Ferramentas de Detecção**: Implementar sistemas de detecção de intrusão (IDS) e monitoramento de atividades suspeitas.
+
+Em paralelo, ataques como XXE (XML External Entities) exploram processadores XML mal configurados para exfiltrar arquivos internos ou realizar DoS.&#x20;
+
+**Como Funciona?**
+
+1. **Definição de Entidades Externas**:
+   * O atacante inclui entidades XML externas maliciosas em um documento XML.
+   * Exemplo: `<!DOCTYPE foo [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>`
+2. **Processamento do XML**:
+   * O processador XML, ao interpretar a entidade, tenta acessar recursos externos, como arquivos locais ou URLs remotas.
+
+* **Prevenção:**
+  * **Desativação de Entidades Externas**: Configurar o parser XML para não processar entidades externas.
+  * **Validação de Entrada**: Validar e sanitizar todo o conteúdo XML antes do processamento.
+
+Já as RCE (Remote Code Execution) permitem que o invasor execute comandos arbitrários no servidor, muitas vezes resultando em controle total da aplicação ou do sistema operacional subjacente.
+
+**Como Funciona?**
+
+1. **Entrada Maliciosa**:
+   * O atacante injeta código malicioso em entradas que serão processadas pelo servidor.
+   * Exemplo: Injetar comandos de shell em um campo que é passado diretamente para o interpretador de comandos do sistema.
+2. **Execução de Código**:
+   * O servidor executa o código malicioso, concedendo ao atacante o controle sobre o sistema.
+
+* **Prevenção:**
+  * **Sanitização de Entrada**: Garantir que todas as entradas do usuário sejam devidamente validadas e sanitizadas.
+  * **Políticas de Segurança**: Configurações rigorosas de segurança que minimizem a superfície de ataque, como desativar funcionalidades desnecessárias e usar permissões mínimas.
 
 **Deepfake Attacks e Engenharia Social Automatizada**
 
