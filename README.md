@@ -79,6 +79,25 @@ A estrutura básica de cada entrada no GitBook segue um **padrão de indexação
 Aqui está a estrutura visual da minha meta de estudos:
 
 ```mermaid
+graph TD;
+    Inicio["🎯 Início do Planejamento"] --> ColetaDocs["📥 Coleta dos Documentos do SENAI"];
+    ColetaDocs --> DivisaoMaterias["📂 Divisão das Matérias e Criação do Cronograma"];
+    DivisaoMaterias --> Fragmentacao["🧩 Fragmentação (Coleta e Destruição)"];
+    Fragmentacao --> Sintese["🧠 Síntese (Construção de uma Máquina Cognitiva)"];
+    Sintese --> Refinamento["🔬 Refinamento (Nível CERN)"];
+    
+    Refinamento --> OrganizacaoGitBook["📑 Organização e Indexação no GitBook"];
+    OrganizacaoGitBook --> ExecucaoEstudos["🚀 Execução e Teste do Modelo"];
+    ExecucaoEstudos --> RevisaoCiclo["♻️ Revisão Iterativa e Otimização"];
+
+    RevisaoCiclo --> Publicacao["📝 Publicação e Consolidação do Conhecimento"];
+    Publicacao --> Fim["✅ Ciclo de Aprendizado Completo (Retroalimentação)"];
+
+    %% Conexões adicionais para mostrar ciclos de retroalimentação
+    RevisaoCiclo -->|Ajuste do Sistema| Fragmentacao;
+    Refinamento -->|Expansão Baseada em Novas Descobertas| Sintese;
+    ExecucaoEstudos -->|Testes Práticos e Validação| RevisaoCiclo;
+
 ```
 
 Cada etapa não é apenas um ponto no tempo, mas **um estado de aprendizado em constante evolução**.
