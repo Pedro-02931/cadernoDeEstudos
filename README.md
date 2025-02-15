@@ -78,8 +78,8 @@ A estrutura básica de cada entrada no GitBook segue um **padrão de indexação
 
 Aqui está a estrutura visual da minha meta de estudos:
 
-\`\`mermaid\
-\`\`
+```mermaid
+```
 
 Cada etapa não é apenas um ponto no tempo, mas **um estado de aprendizado em constante evolução**.
 
