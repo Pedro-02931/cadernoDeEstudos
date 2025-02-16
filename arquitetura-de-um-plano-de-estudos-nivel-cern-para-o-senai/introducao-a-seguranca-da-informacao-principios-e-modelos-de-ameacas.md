@@ -365,7 +365,19 @@ Agora falou minha lingua vadia, matemática pura agora!
 
 ### 4.1 Modelos de Aprendizado para Análises de Ameaças
 
-A análise de ameaças cibernéticas requer modelos capazes de processar grandes volumes de dados heterogêneos (e.g., logs, fluxos de rede). Algoritmos supervisionados, como _Support Vector Machines_ (SVMs) e _Gradient-Boosted Decision Trees_ (GBDTs), são empregados para classificação de padrões maliciosos conhecidos, enquanto técnicas não supervisionadas, como _clustering_ (DBSCAN, _Spectral Clustering_), identificam grupos de atividades anômalas. Aplicam-se também métodos híbridos, como _semi-supervised learning_, para mitigar a escassez de _labels_ em dados de segurança.\
+Dado a complexidade dos ataques, são necessários sistemas e metodos de análises com modelos de aprendizado capazes de analisar, através de grafos, modelos matemáticos, log de sistemas e fluxos de dados, onde pode-se transpirar para string através da escovagem de mensagem (pq manter log repedido? basta agrupar e contar a quantidade de vezes que ele se repete) e formar equipes centauros usando LLM's locais.
+
+&#x20;Algoritmos supervisionados como:&#x20;
+
+* _Support Vector Machines_ (SVMs), que permitem a classificação de padrões maliciosos conhecidos através de um hiperplano que separa classes de dados (maliciosos e não-maliciosos) no espaço de caracterisitcas, podendo ser usados para detectar e classificar ataques cibernéticos de dados históricos
+* &#x20;_Gradient-Boosted Decision Trees_ (GBDTs), que através de múltiplas arvores de decisão, permite-se inferir previsões precisas, onde cada nova arvore corrige o erro da arvore anterior, ideiais para identificar padrões complexos e melhorar a precisão das detecções.
+
+Algoritmos não supervisionadas como de _Clustering:_
+
+* DBSCAN, que é baseado em densidades, permitindo a distinção de regiões densas como cluster e regiões esparsas como ruído, assim informando um quadro geral do que deve ser prioridade ou não.
+* _Spectral Clustering_, que através de algebra linear, segmenta dados em cluster, explorando estruturas dos gráficos de similariades.
+
+E métodos híbridos como _semi-supervised learning_, que com para mitigar a escassez de _labels_ em dados de segurança.\
 **Desafios**:
 
 * **Desbalanceamento de classes**: Técnicas de _resampling_ (SMOTE, ADASYN) e custos assimétricos em funções de perda (e.g., _Focal Loss_) são críticos.
