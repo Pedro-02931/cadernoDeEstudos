@@ -377,12 +377,109 @@ Algoritmos não supervisionadas como de _Clustering:_
 * DBSCAN, que é baseado em densidades, permitindo a distinção de regiões densas como cluster e regiões esparsas como ruído, assim informando um quadro geral do que deve ser prioridade ou não.
 * _Spectral Clustering_, que através de algebra linear, segmenta dados em cluster, explorando estruturas dos gráficos de similariades.
 
-E métodos híbridos como _semi-supervised learning_, que com para mitigar a escassez de _labels_ em dados de segurança.\
-**Desafios**:
+E métodos híbridos como _semi-supervised learning_, que combina pequenos conjuntos de dados rotulados com grandes quantidades de dados não rotulados para o treinamento de modelos, util quando há escassez de dados rotulados em segurança cibenética, melhorando a inferencia do modelo. ~~É dado demais!~~
 
-* **Desbalanceamento de classes**: Técnicas de _resampling_ (SMOTE, ADASYN) e custos assimétricos em funções de perda (e.g., _Focal Loss_) são críticos.
-* _Concept drift_: Modelos online (e.g., _Hoeffding Trees_) atualizam parâmetros dinamicamente frente a mudanças na distribuição de ataques.\
-  **Formulação**: Para um conjunto de dados $$\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$$​, um classificador fθfθ​ otimiza arg⁡min⁡θ∑i=1NL(fθ(xi),yi)+λΩ(θ)argminθ​∑i=1N​L(fθ​(xi​),yi​)+λΩ(θ), onde Ω(θ)Ω(θ) é um regularizador.
+Porém há diversos desafios críticos no uso de IA em segurança cibernética, onde geralmente o custo é assimétrico a soluções, por exemplo:
+
+* Dados de segurança geralmente têm classes desbalanceadas (muito trafego integro, poucos ataques), e soluções como SMOTE (Synthetic Minority Over-sampling Technique) e ADASYN(Adpatative Synthetic Sampling) criam exemplos sintéticos de classes rasas para balancear o conjunto de dados. Além disso, pode-se apicar tecnicas de funções de perdas assimétricas, que atribuem maiores penalidade a erros em classes minoritárias, ajudando o modelo a identificá-las.
+* As caracteristicas dos ataques seguem um equilibrio de Nash, em que até que a parte integra se adapte, a parte invasora tera uma vantagem temporária até o equibrio, onde estamos em um ponto que os ataques estão ficando mais sofisticados. Embora modelos como Hoeffding Trees sejam atualizados continuamente, e bom, para poder se adaptar, esses modelos devem ser otimizados continuamente.
+
+No final, o **equilíbrio é sempre temporário**, e quem se adapta primeiro ganha a vantagem, onde tanto a **IA ofensiva e IA defensiva estão entrando em uma corrida armamentista**, onde cada avanço em defesa é acompanhado de uma nova forma de ataque.
+
+### 4.2 Redes Neurais para Detecção de Anomalias
+
+Arquiteturas profundas como Transformers e Graph Neural Networks processam sequências temporais e grafos de relacionamento entre entidades, como IPs e usuários.
+
+Bom, vou abordar as duas de forma separada.
+
+#### Transformers
+
+* São modelos de aprendizado profundo que utilizam mecanismos de atenção para processar sequências de dados. Eles são altamente eficazes para tarefas de tradução, resumo e PLN, onde através de logs de redes e embbendings, podem ser criadas equipes centauros para mitigar e responder a ataques.
+
+#### Graph Neural Networks (GNNs)
+
+* Operam em dados estruturados como grafos, onde são capazes de capturar relacionamento entre entidades, onde cada nó é um item (ou neuronio) como IP, usuario e dispositivos e há uma relação matematica que cria arestas entre essas entidades, sendo separadas por camadas, podendo ser usadas para mapear interações na rede, identificando lacunas logicas através da concatenação desses neuronios, podendo **entender estruturas ocultas dentro da rede**, gerando listas e dicionarios para ser usados por equipes centauros.
+
+#### Variational Autoencoders (VAEs)
+
+* São modelos generativos que aprendem a modelar a distribuição dos dados de entrada em um espaço latente, utilizando metodos como divergência de Kullback-Leibler para medir o que foi aprendido e o que não foi podendo identificar outliers que posssam representar ameaças.
+
+#### LSTMs
+
+* São um tipo de rede neural recorrente (RNN) projetada para aprender dependências temporais de longo prazo, sendo eficazes para análises e sequências de eventos. Por exemplo, podem ser usadas para monitorar fluxos TCP/IP e detectar exploits aprendendo padrões de tráfego de rede num eixo Z(tempo) computado, meio que tentando prever anomalias.
+
+### 4.3 Cadeias Markovianas e Processos Bayesianos para Previsão de Ataques
+
+Bom, ambos são modelos estatiscos que irei abordar individualmente:
+
+#### Cadeias de Markov
+
+* Modelos matemáticos que descrevem a transição entre diferentes estados de um sistema (o eixo temporal Z que dá noção de continuidade na nossa mente, tipo, o pedro de ontem é diferente do Pedro de agora). Elas são baseadas na ideia de que a probabilidade de transição para o próximo estado depende apenas do estado atual, e não dos anteriores, podendo ser usados contra APT (Advanced Persistent Threat), que ocorrem em múltiplos estágios como reconhecimento e exploração inicial.&#x20;
+* Usando cadeias Markovianas, pode-se modelar as transições entre esses estágios e prever o próximo movimento do atacante.
+
+#### Processos Bayesianos
+
+* São modelos probabilisticos que representam um conjunto de variáveis e suas dependências condicionais através de um gráfico, permitindo a realização de inferências probabilísticas sobre os estados do sistema com base no que foi observado.
+* O uso de DBNs (Dynamic Bayesian Networks) podem ser complementadas com cadeias markovianas para integrar variaveis latentes (não observadas diretamente) e realizar inferência probabilistica em multiestágio, podendo prever a probabilidade de um ataque com base no que já aconteceu.&#x20;
+
+Ambos podem, por exemplo, prever a ação de um Ransomware usando HMMs (Hidden Markov Models), onde os estados do sistema são "ocultos", podendo ser usados para modelar padrões temporais de dados, como os padrões de I/O de um sistema e até prever fase de criptografia de um ataque.
+
+### 4.4 Autoencoders para Detecção de Padrões em Ataques Zero-Day
+
+**Autoencoders (AEs)** são um tipo de rede neural usada para aprender representações compactas (ou codificações) de dados de entrada. Eles são treinados de forma não supervisionada para comprimir dados normais em um espaço latente Z e, em seguida, reconstruí-los da forma mais precisa possível.
+
+Normalmente são separados em três processos:
+
+* **Codificação e Decodificação**:
+  * **A** codificação da rede aprende a mapear os dados de entrada x para uma representação latente z e a parte de decodificação tenta reconstruir os dados originais a partir dessa representação latente, gerando $$\hat{x}$$ .
+* **Treinamento**:
+  * Envolve minimizar a diferença entre a entrada original x e a reconstrução $$\hat{x}$$. Essa diferença é geralmente medida usando a distância Euclidiana $$\| x - \hat{x} \|$$.
+*   **Detecção de Anomalias**:
+
+    * &#x20;Ataques zero-day, que são desconhecidos e ainda não catalogados, podem ser identificados quando a diferença entre a entrada original x e a reconstrução $$\hat{x}$$ excede um limiar $$\tau$$. Se $$∥x−\hat{x}|| > \tau$$, isso indica que a entrada é anômala, pois o autoencoder não consegue reconstruí-la bem.
+
+
+
+Há também outras variantes como Sparse Autoencoders que introduzem uma esparsidade $$||z||_1$$ no espaço latente z, forçando o modelo a aprender características mais representativas e importante, como dados incomuns ou novos ataques, aprendendo a reconhecer. O Denoising Autoencoders são treinados com dados corrompidos  para serem robustos a ruídos, reconstruido uma versão limpa dos dados.
+
+### 4.6 SIEM + Machine Leaning para Monitoramento de Logs
+
+SIEM(Security Information and Event Management) é um sistema que coleta, correlaciona e analisa logs de várias fontes, como firewalls e sistemas de detecção de intrusão (IDS), para detectar e responder a incidentes de segurança através de algoritmos de identificação.
+
+* **Aplicação de Machine Learning**:
+  * **Random Forests e Isolation Forests**: São algoritmos usados para detectar anomalias e correlacionar eventos de segurança.&#x20;
+  * Random Forests criam múltiplas árvores de decisão e tomam decisões baseadas na maioria das respostas dessas árvores.&#x20;
+  * Isolation Forests são usadas especificamente para identificar anomalias, isolando pontos de dados diferentes dos demais.
+  * O principio matematico é a detecção de outliers, em que quanto menos passos for necessário para isolar um valor, mais anomalo ele é.
+* **Pipeline**:
+  * **Normalização**: Transformar logs em vetores numéricos utilizando técnicas como TF-IDF (Term Frequency-Inverse Document Frequency) ou Word2Vec para permitir que os algoritmos de machine learning os processem.
+  * **Treinamento Online**: Utilizar Stochastic Gradient Descent (SGD) para atualização contínua dos modelos, permitindo que eles se adaptem a novos dados em tempo real.
+  * **Desafio de Falsos Positivos**: Reduzir falsos positivos ajustando a relação entre precisão e recall (trade-off), utilizando técnicas como Bayesian Optimization para encontrar o melhor balanceamento.
+
+### 4.7 Federated Learning para Segurança Distribuída
+
+**Federated Learning** é uma técnica de aprendizado de máquina que treina um modelo centralizado utilizando dados distribuídos em múltiplos dispositivos, sem a necessidade de transferir os dados para um local central. Cada dispositivo cria um conjunto de heuristicas e manda para o central, sem a necessidade de mandar os dados internos
+
+* **Arquitetura**:
+  * **Clientes Locais**: Dispositivos locais, como dispositivos IoT no CERN, treinam modelos individuais $$f_{\theta_i}$$ e enviam os gradientes $$∇θi$$ (informações sobre como os parâmetros do modelo devem ser ajustados) para um servidor central.
+  * **Agregação**: O servidor central usa um método chamado FedAvg para combinar os gradientes recebidos e atualizar o modelo global. A fórmula é: $$\theta_{global} = \sum_{i=1}^{K} \frac{n_i}{N} \theta_i$$, onde $$n_i$$ é o tamanho do dataset local e N é o tamanho total dos dados combinados.
+* **Segurança**: A criptografia homomórfica é usada para proteger os gradientes durante a transmissão, garantindo que os dados não possam ser interceptados e analisados por terceiros. Isso é especialmente relevante na detecção de intrusões em redes de aceleradores de partículas.&#x20;
+
+### 4.8 Reinforcement Learning para Resposta Adaptativa a Ameaças
+
+**Reinforcement Learning (RL)** é uma técnica onde agentes aprendem a tomar decisões para maximizar uma recompensa ao longo do tempo. No caso, as heurísticas poderiam ser baseadas em teoria de jogos, onde a competição por recursos pode ser o vetor temporal.
+
+* **Agentes de RL**:
+  * **Aprendem Políticas**: Os agentes aprendem políticas $$\pi: S \rightarrow A$$, onde S é o conjunto de estados possíveis e AA é o conjunto de ações possíveis. Por exemplo, ações como isolar hosts comprometidos ou bloquear IPs maliciosos.
+  * **Modelos Deep Q-Networks (DQN)**: Esses modelos utilizam redes neurais profundas para aprender a maximizar uma função de recompensa $$R = \sum_{t=0}^{T} \gamma^t r_t$$, onde $$r_t$$  é a recompensa no tempo t e $$\gamma$$ é o fator de desconto que valoriza recompensas&#x20;
+
+
+
+
+
+
+
+
 
 
 
