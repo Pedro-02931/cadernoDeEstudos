@@ -276,108 +276,105 @@ O foda é a porra do equilibrio de Nash, vai levar um tempo até o deepfake ser 
 
 Os ataques de extração de modelo visam **inferir os parâmetros internos** de modelos proprietários. Isso é feito por meio de consultas repetidas a um modelo de aprendizado de máquina hospedado em uma plataforma pública.
 
-**Como Funcionam?**
+O grande problema é que assim você, através da inferência de pesos de IA, pode conseguir consultar dados sigilosos internos, como informações de usuarios, rede interna, afastar mulher, reconstruir modelos e todo o tipo de coisa que desvirtua a pessoa.
 
-1. **Consultas Iterativas**:
-   * Os invasores fazem um grande número de consultas ao modelo, usando diferentes dados de entrada.
-2. **Análise de Saídas**:
-   * Com base nas respostas do modelo, eles inferem os parâmetros internos, como pesos e estruturas da rede neural.
-3. **Reconstrução do Modelo**:
-   * Eventualmente, eles conseguem reconstruir um modelo que se comporta de maneira muito semelhante ao modelo original.
+**Há algumas formas de mitigar, como a limitação de consultas, monitoramento de uso e a Introdução de Ruído, pois** pequenas quantidades de ruído estocástico às respostas pode aumentar o grau de entropia do modelo, evitando num colapso deterministico de parâmetros.
 
-O grande problema é que assim você, através da inferencia de pesos de IA, pode conseguir consultar dados sigilosos internos, como informações de usuarios, rede interna, pegar mulher, e todo o tipo de coisa que desvirtua a pessoa.
+**Estratégias Avançadas de Model Extraction**
 
-**Há algumas formas de mitigar, como a limitação de consultas, monitoramento de uso e a Introdução de Ruído, pois** pequenas quantidades de ruído às respostas pode aumentar o grau de entropia do modelo, evitando num colapso deterministico de parametros.
+1. **Knockoff Nets (Ataques de Distilação)**
+   * O atacante treina um **modelo menor e mais eficiente** enviando consultas pra IA alvo.
+   * Esse modelo "knockoff" pode não ser idêntico, mas pode ser **90% funcionalmente similar**, o que já é o suficiente pra copiar as inferências.
+   * Esse método foi utilizado na **treta entre OpenAI e DeepSeek**.
+2. **Side-Channel Model Extraction**
+   * Em vez de focar **só nos outputs do modelo**, o atacante analisa **tempo de resposta, consumo de energia e padrões de acesso à memória** pra inferir características internas.
+   * **Modelos rodando em hardware específico (ex: GPUs NVIDIA)** podem expor **padrões de cálculo que revelam camadas e pesos internos**.
+3. **Fine-Tuning Espelhado**
+   * Um atacante coleta outputs de um modelo e **usa isso pra refinar um modelo pré-treinado**, ajustando os pesos **até que os resultados sejam idênticos** ao modelo original.
 
 #### Model Inversion Attacks
 
-**O que são?**
+Bom, esse método visa **reconstruir dados de treinamento sensíveis** a partir do comportamento do modelo, onde invasores observam como o modelo responde em função dos inputs, e a partir dessas respostas, infere-se atributos de exemplos específicos usados no treinamento do modelo e com tecnicas avançadas (ou com um LLM ajudando), o invasor consegue reconstruir dados confidenciais, como imagens, textos ou informações pessoais, podendo comprometer a integridade de usuários além de propriedade intelectual.
 
-Os ataques de inversão de modelo visam **reconstruir dados de treinamento sensíveis** a partir do comportamento do modelo.
 
-**Como Funcionam?**
 
-1. **Análise do Comportamento do Modelo**:
-   * Os invasores observam como o modelo responde a diferentes entradas.
-2. **Inferência de Dados de Treinamento**:
-   * A partir dessas respostas, eles inferem os atributos de exemplos específicos usados no treinamento do modelo.
-3. **Reconstrução de Dados Sensíveis**:
-   * Com técnicas avançadas, os invasores conseguem reconstruir dados confidenciais, como imagens, textos ou informações pessoais.
+**Estratégias Avançadas de Model Inversion**
 
-**Impacto:**
-
-* **Privacidade**: Informações pessoais ou sensíveis usadas no treinamento podem ser expostas.
-* **Confidencialidade**: Dados proprietários de empresas podem ser comprometidos.
-
-**Prevenção:**
-
-* **Treinamento com Privacidade Diferencial**: Incorporar técnicas que garantam que o modelo não revele informações específicas de exemplos individuais.
-* **Sanitização de Dados**: Remover ou modificar informações sensíveis antes do treinamento.
-* **Arquiteturas Seguras**: Usar arquiteturas de modelo que minimizam a exposição de informações sensíveis.
-
-#### Resumo
-
-**Model Extraction Attacks** utilizam consultas iterativas para inferir parâmetros internos de modelos proprietários, levando ao roubo de propriedade intelectual e exposição de vulnerabilidades. **Model Inversion Attacks** permitem a reconstrução de dados de treinamento sensíveis, comprometendo a privacidade de usuários e organizações. Prevenção inclui a limitação de consultas, monitoramento de uso, introdução de ruído, treinamento com privacidade diferencial e sanitização de dados.
-
-Se precisar de mais alguma coisa, estou aqui para ajudar!
+1. **Gradient Inversion (Recuperação Direta de Dados)**
+   * Se um modelo é exposto via **treinamento federado** (como acontece em dispositivos móveis e IA distribuída), **os gradientes vazados podem ser revertidos para reconstruir imagens, textos e até padrões biométricos**.
+   * Isso foi **demonstrado na extração de dados de modelos GPT**, onde **textos sigilosos podiam ser reconstruídos só analisando os updates dos pesos**.
+2. **Class Boundary Inversion**
+   * O atacante explora **como o modelo toma decisões em limites de classificação**, inferindo **quais padrões ele aprendeu**.
+   * Isso permite **reconstruir imagens ou características de amostras sem ter acesso direto aos dados originais**.
+3. **Membership Inference Attacks**
+   * O atacante não reconstrói os dados em si, mas **descobre se uma determinada amostra estava no treinamento**.
+   * Isso pode ser usado pra **verificar se um paciente participou de um estudo clínico**, comprometendo **dados médicos e privacidade**.
 
 **Poisoning Attacks e Adversarial Perturbations**
 
-**O que são?**
+**Poisoning Attackes**
 
-Os **poisoning attacks** são ataques onde dados maliciosos são introduzidos no conjunto de treinamento de um modelo de aprendizado de máquina. Isso corrompe o modelo, resultando em previsões ou classificações incorretas.
+São ataques onde dados maliciosos são introduzidos no conjunto de treinamento de um modelo de aprendizado de máquina, podendo corromper o modelo, resultando em previsões ou classificações incorretas, o que é perfeito para sabotagem e dissiminação.
 
-**Como Funcionam?**
+Basicamente, através de injeções de dados manipulados no conjunto de treinamento, como adicionar emails que não são spam num treinamento para classificação, pode-se resultar em inferencias equivocadas e correlações falsas, assim bagunçando o filtro e direcionando a conclusões equivocadas.
 
-1. **Introdução de Dados Maliciosos**:
-   * **Descrição**: O atacante insere dados intencionalmente manipulados no conjunto de dados de treinamento do modelo.
-   * **Exemplo**: Em um sistema de classificação de spam, o invasor pode adicionar e-mails que são spam, mas rotulados como não-spam, para treinar o modelo de forma inadequada.
-2. **Corrompimento da Capacidade do Modelo**:
-   * **Descrição**: Esses dados maliciosos fazem com que o modelo aprenda padrões incorretos.
-   * **Impacto**: O modelo pode começar a classificar corretamente, ou prever incorretamente, conduzindo a falsas conclusões.
-3. **Resultados**:
-   * **Direcionamento a Conclusões Falsas**: O modelo pode ser treinado para fazer previsões incorretas sobre certos inputs.
-   * **Redução da Acurácia Geral**: A capacidade do modelo de fazer previsões precisas em geral é diminuída.
+Bom, basicamente pode gerar falsos positivos/negativos ou alucinação de recomendação, tipo receber uma proposta de emprego perfeito em Taiwan e acabar em Miamar dando golpe em velhos ricos.
 
-**Exemplos:**
+**Estratégias Avançadas de Poisoning Attacks**
 
-* **Falsos Positivos/Negativos**: O modelo pode errar na identificação de um ataque cibernético ou na detecção de fraudes financeiras.
-* **Manipulação de Recomendações**: Em sistemas de recomendação, produtos não relevantes podem ser recomendados aos usuários.
+1. **Backdoor Attacks**
+   * Um atacante injeta **padrões específicos** no conjunto de treinamento pra criar **portas atrás d**o modelo~~(lá ele)~~.
+   * Exemplo: Adicionar **pixels invisíveis** em imagens de um classificador **fazendo o modelo sempre classificar algo errado quando esse trigger é ativado**.
+   * Isso já foi usado pra **modificar reconhecimento facial e enganar sistemas de vigilância**.
+2. **Subversion Attacks**
+   * Ao invés de criar **um comportamento específico**, o atacante faz o modelo **desaprender** padrões reais, criando inferências erradas.
+   * Exemplo: Um spammer pode injetar **emails que parecem spam no conjunto de "emails legítimos"**, treinando o modelo a aceitar spam real no futuro, como dito anteriormente.&#x20;
+3. **Triggerless Poisoning**
+   * O modelo é **envenenado de forma sutil**, sem um trigger óbvio, apenas **influenciando estatisticamente** as inferências.
+   * Isso é mais difícil de detectar porque **não há um comportamento anômalo explícito**.
 
 #### Adversarial Perturbations
 
-**O que são?**
+São pequenas alterações em entradas legítimas que são geralmente imperceptíveis a olho nu, mas suficientes para enganar modelos de visão computacional ou processamento de linguagem natural, seja um único pixel no caso de imagem, ou um conjunto de caracteres tipo 8==B.
 
-**Adversarial perturbations** são pequenas alterações em entradas legítimas que são geralmente imperceptíveis a olho nu, mas suficientes para enganar modelos de visão computacional ou processamento de linguagem natural.
+Bom, apesar das alterações parecerem pequenas, podem ter estragos gigantes em sistemas matemáticos devido a remoção de cadeias de redundâncias, por exemplo na detecção de ameaças por sistemas automatizados, ou na geração de imagens [~~de nazistas negros(?)~~](https://noticias.uol.com.br/ultimas-noticias/agencia-estado/2024/02/22/google-suspende-geracao-de-imagens-por-ia-apos-erros-raciais-em-fotos-de-guerra.htm)~~.~~
 
-**Como Funcionam?**
+**Estratégias Avançadas de Adversárial Pertubations**
 
-1. **Pequenas Alterações na Entrada**:
-   * **Descrição**: O atacante faz minúsculas modificações na entrada de dados que não são perceptíveis para um ser humano.
-   * **Exemplo**: Em uma imagem, isso pode envolver a alteração de pixels individuais para enganar um modelo de reconhecimento de imagem.
-2. **Engano do Modelo**:
-   * **Descrição**: Essas alterações, embora pequenas, fazem com que o modelo interprete a entrada de maneira completamente diferente.
-   * **Impacto**: O modelo pode fazer classificações ou previsões completamente erradas.
-3. **Exposição de Falhas Críticas**:
-   * **Descrição**: Através dessas alterações, as falhas nos modelos de aprendizado de máquina são expostas.
-   * **Impacto**: Isso pode comprometer sistemas de segurança automatizados que dependem desses modelos para detecção e mitigação de ameaças.
+1. **Universal Perturbations**
+   * Em vez de modificar **uma única imagem**, o atacante cria um **padrão de ruído que funciona em QUALQUER INPUT**, enganando o modelo **em todas as instâncias**.
+2. **Text-Based Adversarial Attacks**
+   * Pequenas alterações em **sequências de texto** podem mudar **totalmente a resposta de um modelo de NLP (tipo GPT)**.
+   * Exemplo: Um chatbot que deveria **bloquear discurso de ódio pode ser enganado** com alterações mínimas como `"he//o w0rld"` ao invés de `"hello world"`.
+3. **Patch-Based Attacks**
+   * Em vez de mudar pixels individuais, o atacante **coloca um pequeno patch em uma imagem** que engana **modelos de visão computacional**.
+   * Isso já foi testado contra **sistemas de reconhecimento facial** → Pequenas estampas no rosto podem fazer uma IA **pensar que um invasor é uma pessoa autorizada**.
 
-**Exemplos:**
+#### Como mitigar?
 
-* **Imagem**: Uma imagem de um gato pode ser alterada imperceptivelmente para ser classificada erroneamente como um cachorro.
-* **Texto**: Mudanças sutis em um texto podem fazer um modelo de processamento de linguagem natural interpretar um comando inofensivo como malicioso.
+Todas as formas podem ser resumidas em:
 
-#### Prevenção e Mitigação
+* Incorporação de técnicas que garantem que o modelo não revele informações especificas&#x20;
+* Adição de ruído estocástico para aumentar a entropia e ser menos obvio
+* Implementar etapas de sanitização e anonimização de modelos federados através de protocolos robustos, garantindo o mínimo de exposição e dados.&#x20;
+* Criar modelos menos dependentes de exemplos específicos pode reduzir a precisão da inversão.
 
-1. **Treinamento Robusto**:
-   * **Descrição**: Inclui técnicas para tornar o modelo robusto contra esses tipos de ataques.
-   * **Método**: Adicionar ruído durante o treinamento ou usar técnicas de treinamento adversarial.
-2. **Monitoramento Contínuo**:
-   * **Descrição**: Monitorar os dados de entrada em tempo real para detectar padrões suspeitos.
-   * **Método**: Implementação de sistemas de detecção de anomalias.
-3. **Validação Cruzada**:
-   * **Descrição**: Usar múltiplos modelos e comparar seus resultados para detectar incoerências.
-   * **Método**: Se modelos diferentes começarem a divergir significativamente, isso pode ser um sinal de ataque.
+## **4. Inteligência Artificial e Segurança da Informação: Estratégias Defensivas**
+
+Agora falou minha lingua vadia, matemática pura agora!
+
+### 4.1 Modelos de Aprendizado para Análises de Ameaças
+
+A análise de ameaças cibernéticas requer modelos capazes de processar grandes volumes de dados heterogêneos (e.g., logs, fluxos de rede). Algoritmos supervisionados, como _Support Vector Machines_ (SVMs) e _Gradient-Boosted Decision Trees_ (GBDTs), são empregados para classificação de padrões maliciosos conhecidos, enquanto técnicas não supervisionadas, como _clustering_ (DBSCAN, _Spectral Clustering_), identificam grupos de atividades anômalas. Aplicam-se também métodos híbridos, como _semi-supervised learning_, para mitigar a escassez de _labels_ em dados de segurança.\
+**Desafios**:
+
+* **Desbalanceamento de classes**: Técnicas de _resampling_ (SMOTE, ADASYN) e custos assimétricos em funções de perda (e.g., _Focal Loss_) são críticos.
+* _Concept drift_: Modelos online (e.g., _Hoeffding Trees_) atualizam parâmetros dinamicamente frente a mudanças na distribuição de ataques.\
+  **Formulação**: Para um conjunto de dados $$\mathcal{D} = \{(\mathbf{x}_i, y_i)\}_{i=1}^N$$​, um classificador fθfθ​ otimiza arg⁡min⁡θ∑i=1NL(fθ(xi),yi)+λΩ(θ)argminθ​∑i=1N​L(fθ​(xi​),yi​)+λΩ(θ), onde Ω(θ)Ω(θ) é um regularizador.
+
+
+
+
 
 
 
