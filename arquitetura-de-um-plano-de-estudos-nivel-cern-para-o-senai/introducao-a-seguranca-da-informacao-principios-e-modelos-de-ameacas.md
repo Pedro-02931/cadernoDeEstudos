@@ -176,7 +176,7 @@ Há algumas formas avançadas de evitar essa falha e proteger de motores polimó
 * Outra forma seria o uso de modelos de aprendizado de máquina, que podem ser treinados para reconhecer comportamentos maliciosos e padrões ocultos em grandes volumes de dados, onde o papel do humano, através de uma transpilação de comandos e logs, e em conjunto com LLM's, pode-se estudar heurísticas não exploradas.
 * Porém se você lidar com metamorfismo, que não só altera a assinatura, mas **reescreve completamente o código entre execuções**, trocando opcodes, alterando instruções em runtime e até inserindo código "lixo" pra confundir disassemblers e heurísticas, tu ta fodido kkkkk.
 
-### **Injeção de Código (SQLi, XXE, RCE)**
+#### **Injeção de Código (SQLi, XXE, RCE)**
 
 A injeção de comandos SQL (SQLi) continua sendo um dos métodos mais comuns para obtenção de acesso não autorizado a bancos de dados, onde a vulnerabilidade permite que um atacante interfira nas consultas que uma aplicação faz ao banco de dados. Isso ocorre quando dados fornecidos pelo usuário são incluídos diretamente em uma consulta SQL sem a devida validação ou sanitização.&#x20;
 
@@ -233,7 +233,7 @@ Já as RCE (Remote Code Execution) permitem que o invasor execute comandos arbit
 
 Uma das melhores formas de mitigar essas vulnerabilidades é o uso de bibliotecas de sanitização e ORMs e Query Builders seguros, onde através de redundâncias, você garante que os dados estão definitivamente em formato de texto, não em código, além disso, o uso de ferramentas de IDS básicas podem, num custo-benefício, mitigar, funcionando como camada inicial, além disso, a d**esativação de entidades externas, como** configurar o parser XML, e na medida do possível, usar JSON. Além disso, configurações rigorosas de segurança que minimizem a superfície de ataque, como desativar funcionalidades desnecessárias e usar permissões mínimas são necessárias.
 
-### **Deepfake Attacks e Engenharia Social Automatizada**
+### **3.6 Deepfake Attacks e Engenharia Social Automatizada**
 
 Deepfakes são vídeos, áudios ou imagens que foram alterados ou gerados por técnicas de aprendizado profundo (deep learning) para parecerem realistas. Eles usam redes neurais, como redes generativas adversariais (GANs), para criar conteúdo falsificado, onde através de grandes quantidades de dados (como vídeos ou áudios de uma pessoa), pode-se treinar um modelos de IA. Esses modelos são então capazes de gerar mídia sintética que se parece e soa como a pessoa alvo.
 
@@ -261,15 +261,18 @@ O foda é a porra do equilibrio de Nash, vai levar um tempo até o deepfake ser 
 * **Blockchains e Assinatura Digital de Mídia**
   * Algumas empresas estão propondo o uso de **blockchain para verificar a autenticidade de vídeos e áudios**, criando registros imutáveis de quando foram gravados.
   * **Problema**: Isso exige adoção massiva, e a maioria dos vídeos ainda não tem esse tipo de metadado embutido.
-* **Autenticação Multi-Fator (MFA) com Proof-of-Life**
-  * O texto menciona **MFA como um mitigador**, o que é uma abordagem correta, mas **a tendência é que métodos tradicionais de autenticação biométrica percam a confiabilidade**.
-  * Empresas já estão adotando **análises comportamentais** junto com MFA, verificando **microvariações na digitação, movimentação do mouse e padrões de voz** pra garantir que o usuário é real.
+*   **Autenticação Multi-Fator (MFA) com Proof-of-Life**
+
+    * O texto menciona **MFA como um mitigador**, o que é uma abordagem correta, mas **a tendência é que métodos tradicionais de autenticação biométrica percam a confiabilidade**.
+    * Empresas já estão adotando **análises comportamentais** junto com MFA, verificando **microvariações na digitação, movimentação do mouse e padrões de voz** pra garantir que o usuário é real.
+
+
+
+~~Bom, pelo menos o porno vai ser mais interessante com o Full-Body Deepfake(Rule 34, não tem como fugir, não importa onde se esconder)~~
 
 ### 3.6 Ataques Baseados em IA e Redes Neurais Adversariais
 
 **Model Extraction & Model Inversion Attacks**
-
-**O que são?**
 
 Os ataques de extração de modelo visam **inferir os parâmetros internos** de modelos proprietários. Isso é feito por meio de consultas repetidas a um modelo de aprendizado de máquina hospedado em uma plataforma pública.
 
@@ -282,16 +285,9 @@ Os ataques de extração de modelo visam **inferir os parâmetros internos** de 
 3. **Reconstrução do Modelo**:
    * Eventualmente, eles conseguem reconstruir um modelo que se comporta de maneira muito semelhante ao modelo original.
 
-**Impacto:**
+O grande problema é que assim você, através da inferencia de pesos de IA, pode conseguir consultar dados sigilosos internos, como informações de usuarios, rede interna, pegar mulher, e todo o tipo de coisa que desvirtua a pessoa.
 
-* **Propriedade Intelectual**: Os invasores podem roubar a propriedade intelectual, especialmente se o modelo tiver sido treinado com grandes custos e esforços.
-* **Segurança**: Se os parâmetros internos forem conhecidos, os invasores podem identificar e explorar vulnerabilidades no modelo.
-
-**Prevenção:**
-
-* **Limitação de Consultas**: Restringir o número de consultas que um usuário pode fazer ao modelo.
-* **Monitoramento de Uso**: Detectar e bloquear padrões suspeitos de uso.
-* **Introdução de Ruído**: Adicionar pequenas quantidades de ruído às respostas para dificultar a inferência dos parâmetros internos.
+**Há algumas formas de mitigar, como a limitação de consultas, monitoramento de uso e a Introdução de Ruído, pois** pequenas quantidades de ruído às respostas pode aumentar o grau de entropia do modelo, evitando num colapso deterministico de parametros.
 
 #### Model Inversion Attacks
 
